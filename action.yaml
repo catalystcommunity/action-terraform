@@ -88,6 +88,9 @@ runs:
 
     - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'plan'
       uses: actions/github-script@v6
+      env:
+        PLAN_STDOUT: "${{ steps.plan.outputs.stdout }}"
+        PLAN_STDERR: "${{ steps.plan.outputs.stderr }}"
       with:
         github-token: ${{ inputs.github-token }}
         script: |
@@ -96,36 +99,36 @@ runs:
             output = output + '#### Terraform Format and Style: \`${{ steps.fmt.outcome }}\`\n';
           }
 
-          output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
-
           if (${{ inputs.check-validate }}) {
-            output = output + '#### Terraform Validation: \`${{ steps.validate.outcome }}\`
+            output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
+          }
+
+          output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
 
           \`\`\`\n
           ${{ steps.validate.outputs.stdout }}
           \`\`\`
 
-          </details>\n'
-          }
+          </details>
 
-          output = output + '#### Terraform Plan: \`${{ steps.plan.outcome }}\`
+          #### Terraform Plan: \`${{ steps.plan.outcome }}\`
           
           <details><summary>Show Plan</summary>
           
           #### stdout
           \`\`\`\n
-          ${{ steps.plan.outputs.stdout }}
+          ${process.env.PLAN_STDOUT}
           \`\`\`
 
           #### stderr
           \`\`\`\n
-          ${{ steps.plan.outputs.stderr }}
+          ${process.env.PLAN_STDERR}
           \`\`\`
           
           </details>
           
-          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*';
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
             
           github.rest.issues.createComment({
             issue_number: context.issue.number,
@@ -143,26 +146,29 @@ runs:
 
     - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'apply'
       uses: actions/github-script@v6
+      env:
+        APPLY_STDOUT: "${{ steps.apply.outputs.stdout }}"
+        APPLY_STDERR: "${{ steps.apply.outputs.stderr }}"
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const output = '#### Terraform Apply: \`${{ steps.apply.outcome }}\`
+          const output = `#### Terraform Apply: \`${{ steps.apply.outcome }}\`
           
           <details><summary>Show Apply</summary>
           
           #### stdout
           \`\`\`\n
-          ${{ steps.apply.outputs.stdout }}
+          ${process.env.APPLY_STDOUT}
           \`\`\`
 
           #### stderr
           \`\`\`\n
-          ${{ steps.apply.outputs.stderr }}
+          ${process.env.APPLY_STDERR}
           \`\`\`
           
           </details>
           
-          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*';
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
             
           github.rest.issues.createComment({
             issue_number: context.issue.number,
