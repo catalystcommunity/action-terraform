@@ -99,11 +99,10 @@ runs:
             output = output + '#### Terraform Format and Style: \`${{ steps.fmt.outcome }}\`\n';
           }
 
-          if (${{ inputs.check-validate }}) {
-            output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
-          }
+          output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
 
-          output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
+          if (${{ inputs.check-validate }}) {
+            output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
 
           \`\`\`\n
@@ -111,8 +110,10 @@ runs:
           \`\`\`
 
           </details>
+          `
+          }
 
-          #### Terraform Plan: \`${{ steps.plan.outcome }}\`
+          output = output + `#### Terraform Plan: \`${{ steps.plan.outcome }}\`
           
           <details><summary>Show Plan</summary>
           
