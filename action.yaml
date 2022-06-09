@@ -72,7 +72,7 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform init
 
-    - if: inputs.validate && inputs.command == 'plan'
+    - if: inputs.check-validate && inputs.command == 'plan'
       name: Terraform Validate
       id: validate
       shell: bash
