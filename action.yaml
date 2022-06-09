@@ -1,22 +1,173 @@
-name: 'Hello World' # taken from https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
-description: 'Greet someone'
+name: Run Terraform
+description: Runs a specified terraform command and comments on pull requests. Has built in support for authenticating to AWS.
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  command:
+    description: Which Terraform command to execute, supports `plan` and `apply`
     required: true
-    default: 'World'
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+  work-dir:
+    description: Location of the Terraform root module to execute from
+    required: false
+    default: ./
+  check-format:
+    description: Check format with `terraform fmt`, report errors in PR comment
+    required: false
+    default: true
+  check-validate:
+    description: Validate configuration with `terraform validate`, report errors in PR comment
+    required: false
+    default: true
+  comment-on-pr:
+    description: Whether to comment the command's result on the pull request if the event is a pull request
+    required: false
+    default: true
+  github-token:
+    description: Github token to use for creating comments
+    required: false
+    default: ${{ github.token }}
+  provider:
+    description: Cloud provider to get credentials for. Currently only supports `aws`.
+    required: false
+    default: ''
+  aws-region:
+    description: AWS region
+    required: false
+    default: us-west-2
+  aws-access-key-id:
+    description: AWS access key id to use
+    required: false
+    default: ''
+  aws-secret-access-key:
+    description: AWS secret access key
+    required: false
+    default: ''
+
 runs:
   using: "composite"
+  defaults:
+    run:
+      working-directory: ${{ inputs.work-dir }}
   steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
-      shell: bash
-    - id: random-number-generator
-      run: echo "::set-output name=random-id::$(echo $RANDOM)"
-      shell: bash
-    - run: ${{ github.action_path }}/goodbye.sh
-      shell: bash
+    - name: Checkout
+      uses: actions/checkout@v2
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - if: inputs.provider == 'aws'
+      name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.aws-region }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+
+    - if: inputs.check-format && inputs.command == 'plan'
+      name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - if: inputs.validate && inputs.command == 'plan'
+      name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - if: inputs.command == 'plan'
+      name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color
+
+    - if: inputs.command == 'plan'
+      uses: actions/github-script@v6
+      if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr
+      env:
+        PLAN_STDOUT: "${{ steps.plan.outputs.stdout }}"
+        PLAN_STDERR: "${{ steps.plan.outputs.stderr }}"
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          let output = '';
+          if (${{ inputs.check-format }}) {
+            output = output + '#### Terraform Format and Style: \`${{ steps.fmt.outcome }}\`\n';
+          }
+
+          if (${{ inputs.check-validate }}) {
+            output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
+          }
+
+          output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+
+          #### Terraform Plan: \`${{ steps.plan.outcome }}\`
+          
+          <details><summary>Show Plan</summary>
+          
+          #### stdout
+          \`\`\`\n
+          ${process.env.PLAN_STDOUT}
+          \`\`\`
+
+          #### stderr
+          \`\`\`\n
+          ${process.env.PLAN_STDERR}
+          \`\`\`
+          
+          </details>
+          
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+
+    - if: inputs.command == 'apply'
+      name: Terraform Apply
+      id: apply
+      run: terraform apply -no-color -auto-approve -input=false
+
+    - if: inputs.command == 'apply'
+      uses: actions/github-script@v6
+      if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr
+      env:
+        APPLY_STDOUT: "${{ steps.apply.outputs.stdout }}"
+        APPLY_STDERR: "${{ steps.apply.outputs.stderr }}"
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const output = `#### Terraform Apply: \`${{ steps.apply.outcome }}\`
+          
+          <details><summary>Show Apply</summary>
+          
+          #### stdout
+          \`\`\`\n
+          ${process.env.APPLY_STDOUT}
+          \`\`\`
+
+          #### stderr
+          \`\`\`\n
+          ${process.env.APPLY_STDERR}
+          \`\`\`
+          
+          </details>
+          
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
