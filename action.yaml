@@ -88,6 +88,9 @@ runs:
 
     - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'plan'
       uses: actions/github-script@v6
+      env:
+        PLAN_STDOUT: "${{ steps.plan.outputs.stdout }}"
+        PLAN_STDERR: "${{ steps.plan.outputs.stderr }}"
       with:
         github-token: ${{ inputs.github-token }}
         script: |
@@ -115,13 +118,13 @@ runs:
           <details><summary>Show Plan</summary>
           
           #### stdout
-          \`\`\`\n
-          ${{ steps.plan.outputs.stdout }}
+          \`\`\`
+          ${process.env.PLAN_STDOUT}
           \`\`\`
 
           #### stderr
-          \`\`\`\n
-          ${{ steps.plan.outputs.stderr }}
+          \`\`\`
+          ${process.env.PLAN_STDERR}
           \`\`\`
           
           </details>
@@ -144,6 +147,9 @@ runs:
 
     - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'apply'
       uses: actions/github-script@v6
+      env:
+        APPLY_STDOUT: "${{ steps.apply.outputs.stdout }}"
+        APPLY_STDERR: "${{ steps.apply.outputs.stderr }}"
       with:
         github-token: ${{ inputs.github-token }}
         script: |
@@ -152,13 +158,13 @@ runs:
           <details><summary>Show Apply</summary>
           
           #### stdout
-          \`\`\`\n
-          ${{ steps.apply.outputs.stdout }}
+          \`\`\`
+          ${process.env.APPLY_STDOUT}
           \`\`\`
 
           #### stderr
-          \`\`\`\n
-          ${{ steps.apply.outputs.stderr }}
+          \`\`\`
+          ${process.env.APPLY_STDERR}
           \`\`\`
           
           </details>
