@@ -58,7 +58,7 @@ runs:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
 
-    - if: inputs.check-format == 'true' && inputs.command == 'plan'
+    - if: inputs.check-format == true && inputs.command == 'plan'
       name: Terraform fmt
       id: fmt
       shell: bash
@@ -72,7 +72,7 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform init
 
-    - if: inputs.check-validate == 'true' && inputs.command == 'plan'
+    - if: inputs.check-validate == true && inputs.command == 'plan'
       name: Terraform Validate
       id: validate
       shell: bash
@@ -86,7 +86,7 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform plan -no-color
 
-    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr == 'true' && inputs.command == 'plan'
+    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr == true && inputs.command == 'plan'
       uses: actions/github-script@v6
       env:
         PLAN_STDOUT: "${{ steps.plan.outputs.stdout }}"
@@ -145,7 +145,7 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform apply -no-color -auto-approve -input=false
 
-    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr == 'true' && inputs.command == 'apply'
+    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr == true && inputs.command == 'apply'
       uses: actions/github-script@v6
       env:
         APPLY_STDOUT: "${{ steps.apply.outputs.stdout }}"
