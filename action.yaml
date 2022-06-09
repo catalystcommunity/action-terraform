@@ -106,7 +106,8 @@ runs:
           ${{ steps.validate.outputs.stdout }}
           \`\`\`
 
-          </details>\n`
+          </details>\n
+          `
           }
 
           output = output + `#### Terraform Plan: \`${{ steps.plan.outcome }}\`
