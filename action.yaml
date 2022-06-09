@@ -86,9 +86,8 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform plan -no-color
 
-    - if: inputs.command == 'plan'
+    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'plan'
       uses: actions/github-script@v6
-      if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr
       env:
         PLAN_STDOUT: "${{ steps.plan.outputs.stdout }}"
         PLAN_STDERR: "${{ steps.plan.outputs.stderr }}"
@@ -145,9 +144,8 @@ runs:
       working-directory: ${{ inputs.work-dir }}
       run: terraform apply -no-color -auto-approve -input=false
 
-    - if: inputs.command == 'apply'
+    - if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr && inputs.command == 'apply'
       uses: actions/github-script@v6
-      if: always() && github.event_name == 'pull_request' && inputs.comment-on-pr
       env:
         APPLY_STDOUT: "${{ steps.apply.outputs.stdout }}"
         APPLY_STDERR: "${{ steps.apply.outputs.stderr }}"
