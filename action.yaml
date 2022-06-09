@@ -43,10 +43,6 @@ inputs:
 
 runs:
   using: "composite"
-  defaults:
-    run:
-      shell: bash
-      working-directory: ${{ inputs.work-dir }}
   steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -65,21 +61,29 @@ runs:
     - if: inputs.check-format && inputs.command == 'plan'
       name: Terraform fmt
       id: fmt
+      shell: bash
+      working-directory: ${{ inputs.work-dir }}
       run: terraform fmt -check
       continue-on-error: true
 
     - name: Terraform Init
       id: init
+      shell: bash
+      working-directory: ${{ inputs.work-dir }}
       run: terraform init
 
     - if: inputs.validate && inputs.command == 'plan'
       name: Terraform Validate
       id: validate
+      shell: bash
+      working-directory: ${{ inputs.work-dir }}
       run: terraform validate -no-color
 
     - if: inputs.command == 'plan'
       name: Terraform Plan
       id: plan
+      shell: bash
+      working-directory: ${{ inputs.work-dir }}
       run: terraform plan -no-color
 
     - if: inputs.command == 'plan'
@@ -137,6 +141,8 @@ runs:
     - if: inputs.command == 'apply'
       name: Terraform Apply
       id: apply
+      shell: bash
+      working-directory: ${{ inputs.work-dir }}
       run: terraform apply -no-color -auto-approve -input=false
 
     - if: inputs.command == 'apply'
