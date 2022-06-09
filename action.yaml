@@ -99,17 +99,17 @@ runs:
           output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
 
           if (${{ inputs.check-validate }}) {
-            output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
+            output = output + '#### Terraform Validation: \`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
 
           \`\`\`\n
           ${{ steps.validate.outputs.stdout }}
           \`\`\`
 
-          </details>\n`
+          </details>\n'
           }
 
-          output = output + `#### Terraform Plan: \`${{ steps.plan.outcome }}\`
+          output = output + '#### Terraform Plan: \`${{ steps.plan.outcome }}\`
           
           <details><summary>Show Plan</summary>
           
@@ -125,7 +125,7 @@ runs:
           
           </details>
           
-          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*';
             
           github.rest.issues.createComment({
             issue_number: context.issue.number,
@@ -146,7 +146,7 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const output = `#### Terraform Apply: \`${{ steps.apply.outcome }}\`
+          const output = '#### Terraform Apply: \`${{ steps.apply.outcome }}\`
           
           <details><summary>Show Apply</summary>
           
@@ -162,7 +162,7 @@ runs:
           
           </details>
           
-          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*';
             
           github.rest.issues.createComment({
             issue_number: context.issue.number,
