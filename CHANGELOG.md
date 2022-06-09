@@ -1,3 +1,10 @@
+# 1.0.0 (2022-06-09)
+
+
+### Bug Fixes
+
+* initial action ([#1](https://github.com/catalystsquad/action-terraform/issues/1)) ([4340ed7](https://github.com/catalystsquad/action-terraform/commit/4340ed7ff9ecabb4eb03ac3f92f496915ce9689a))
+
 # 1.0.0 (2022-02-28)
 
 
