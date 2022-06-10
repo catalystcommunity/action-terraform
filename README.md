@@ -84,21 +84,53 @@ Runs a specified terraform command and comments on pull requests. Has built in s
 
 ### Example usage
 
+Terraform Plan:
 ```yaml
-on: [push]
-
+name: Validate pull request
+on:
+  pull_request:
+    branches:
+      - main
 jobs:
-  hello_world_job:
+  plan:
+    name: Plan
     runs-on: ubuntu-latest
-    name: A job to say hello
     steps:
-      - uses: actions/checkout@v2
-      - id: foo
-        uses: actions/hello-world-composite-action@v1
+      - name: Plan
+        uses: catalystsquad/action-terraform@v1
         with:
-          who-to-greet: "Mona the Octocat"
-      - run: echo random-number ${{ steps.foo.outputs.random-number }}
-        shell: bash
+          command: plan
+          work-dir: my-tf-env
+          provider: aws
+          aws-region: us-west-2
+          aws-access-key-id: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+```
+
+Terraform Apply:
+```yaml
+name: Deploy
+on: # only trigger on prs to main closed
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+jobs:
+  apply:
+    if: github.event.pull_request.merged == true # only deploy on merged PRs
+    name: Apply
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply
+        uses: catalystsquad/action-terraform@v1
+        with:
+          command: apply
+          work-dir: my-tf-env
+          provider: aws
+          aws-region: us-west-2
+          aws-access-key-id: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
 ```
 
 <!-- end examples -->
