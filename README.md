@@ -5,7 +5,18 @@
 <!-- end title -->
 <!-- start description -->
 
-Runs a specified terraform command and comments on pull requests. Has built in support for authenticating to AWS.
+Runs a specified terraform command and comments on pull requests. Has built in
+support for authenticating to AWS.
+
+All commands execute a `terraform init`.
+
+The `plan` command also executes the `terraform fmt` and `terraform validate`
+commands are reports their result in the PR comment.
+
+The `validate` command is meant for when you only want to run a `terraform
+validate` command, for use in terraform modules that have limited testing
+capability without running integration tests. There is no need to run the
+action twice with a `validate` and `plan` command.
 
 <!-- end description -->
 <!-- start contents -->
