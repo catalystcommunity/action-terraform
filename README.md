@@ -5,18 +5,7 @@
 <!-- end title -->
 <!-- start description -->
 
-Runs a specified terraform command and comments on pull requests. Has built in
-support for authenticating to AWS.
-
-All commands execute a `terraform init`.
-
-The `plan` command also executes the `terraform fmt` and `terraform validate`
-commands are reports their result in the PR comment.
-
-The `validate` command is meant for when you only want to run a `terraform
-validate` command, for use in terraform modules that have limited testing
-capability without running integration tests. There is no need to run the
-action twice with a `validate` and `plan` command.
+Runs a specified terraform command and comments on pull requests. Has built in support for authenticating to AWS.
 
 <!-- end description -->
 <!-- start contents -->
@@ -26,7 +15,7 @@ action twice with a `validate` and `plan` command.
 ```yaml
 - uses: catalystsquad/action-terraform@undefined
   with:
-    # Which Terraform command to execute, supports `plan` and `apply`
+    # Which Terraform command to execute, supports `plan`, `apply`, and `validate`.
     command: ""
 
     # Location of the Terraform root module to execute from
@@ -72,7 +61,7 @@ action twice with a `validate` and `plan` command.
 
 | **Input**                   | **Description**                                                                            |      **Default**      | **Required** |
 | :-------------------------- | :----------------------------------------------------------------------------------------- | :-------------------: | :----------: |
-| **`command`**               | Which Terraform command to execute, supports `plan` and `apply`                            |                       |   **true**   |
+| **`command`**               | Which Terraform command to execute, supports `plan`, `apply`, and `validate`.              |                       |   **true**   |
 | **`work-dir`**              | Location of the Terraform root module to execute from                                      |         `./`          |  **false**   |
 | **`check-format`**          | Check format with `terraform fmt`, report errors in PR comment                             |        `true`         |  **false**   |
 | **`check-validate`**        | Validate configuration with `terraform validate`, report errors in PR comment              |        `true`         |  **false**   |
@@ -96,6 +85,7 @@ action twice with a `validate` and `plan` command.
 ### Example usage
 
 Terraform Plan:
+
 ```yaml
 name: Validate pull request
 on:
@@ -119,6 +109,7 @@ jobs:
 ```
 
 Terraform Apply:
+
 ```yaml
 name: Deploy
 on: # only trigger on prs to main closed
