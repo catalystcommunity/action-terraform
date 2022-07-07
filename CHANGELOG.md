@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/catalystsquad/action-terraform/compare/v1.0.0...v1.1.0) (2022-07-07)
+
+
+### Bug Fixes
+
+* update readme examples ([#2](https://github.com/catalystsquad/action-terraform/issues/2)) ([b217ddf](https://github.com/catalystsquad/action-terraform/commit/b217ddfc7bafffebefe13bcc0105c3c91ac15bc8))
+
+
+### Features
+
+* add validate command ([#3](https://github.com/catalystsquad/action-terraform/issues/3)) ([a9965da](https://github.com/catalystsquad/action-terraform/commit/a9965daedc73d80d16e2e246bf4681ed3d24f72f))
+
 # 1.0.0 (2022-06-09)
 
 
