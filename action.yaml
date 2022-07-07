@@ -98,7 +98,6 @@ runs:
           \`\`\`
 
           </details>\n
-          `
 
           *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
             
