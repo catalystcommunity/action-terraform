@@ -58,7 +58,7 @@ runs:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
 
-    - if: inputs.check-format == 'true' && inputs.command == 'plan'
+    - if: inputs.check-format == 'true' && (inputs.command == 'plan' || inputs.command == 'validate')
       name: Terraform fmt
       id: fmt
       shell: bash
@@ -89,10 +89,8 @@ runs:
             output = output + '#### Terraform Format and Style: \`${{ steps.fmt.outcome }}\`\n';
           }
 
-          output = output + '#### Terraform Initialization: \`${{ steps.init.outcome }}\`\n';
-
-          if (${{ inputs.check-validate }}) {
-            output = output + `#### Terraform Validation: \`${{ steps.validate.outcome }}\`
+          output = output + `#### Terraform Initialization: \`${{ steps.init.outcome }}\`
+          #### Terraform Validation: \`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
 
           \`\`\`\n
@@ -101,7 +99,6 @@ runs:
 
           </details>\n
           `
-          }
 
           *Action: \`${{ github.event_name }}\`, Working Directory: \`${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
             
