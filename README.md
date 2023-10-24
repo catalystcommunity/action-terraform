@@ -54,23 +54,33 @@ Runs a specified terraform command and comments on pull requests. Has built in s
     # AWS secret access key
     # Default:
     aws-secret-access-key: ""
+
+    # AWS IAM role to assume
+    # Default:
+    aws-role-to-assume: ""
+
+    # Whether to skip session tagging during AWS role assumption
+    # Default:
+    aws-role-skip-session-tagging: ""
 ```
 
 <!-- end usage -->
 <!-- start inputs -->
 
-| **Input**                   | **Description**                                                                            |      **Default**      | **Required** |
-| :-------------------------- | :----------------------------------------------------------------------------------------- | :-------------------: | :----------: |
-| **`command`**               | Which Terraform command to execute, supports `plan`, `apply`, and `validate`.              |                       |   **true**   |
-| **`work-dir`**              | Location of the Terraform root module to execute from                                      |         `./`          |  **false**   |
-| **`check-format`**          | Check format with `terraform fmt`, report errors in PR comment                             |        `true`         |  **false**   |
-| **`check-validate`**        | Validate configuration with `terraform validate`, report errors in PR comment              |        `true`         |  **false**   |
-| **`comment-on-pr`**         | Whether to comment the command's result on the pull request if the event is a pull request |        `true`         |  **false**   |
-| **`github-token`**          | Github token to use for creating comments                                                  | `${{ github.token }}` |  **false**   |
-| **`provider`**              | Cloud provider to get credentials for. Currently only supports `aws`.                      |                       |  **false**   |
-| **`aws-region`**            | AWS region                                                                                 |      `us-west-2`      |  **false**   |
-| **`aws-access-key-id`**     | AWS access key id to use                                                                   |                       |  **false**   |
-| **`aws-secret-access-key`** | AWS secret access key                                                                      |                       |  **false**   |
+| **Input**                           | **Description**                                                                            |      **Default**      | **Required** |
+| :---------------------------------- | :----------------------------------------------------------------------------------------- | :-------------------: | :----------: |
+| **`command`**                       | Which Terraform command to execute, supports `plan`, `apply`, and `validate`.              |                       |   **true**   |
+| **`work-dir`**                      | Location of the Terraform root module to execute from                                      |         `./`          |  **false**   |
+| **`check-format`**                  | Check format with `terraform fmt`, report errors in PR comment                             |        `true`         |  **false**   |
+| **`check-validate`**                | Validate configuration with `terraform validate`, report errors in PR comment              |        `true`         |  **false**   |
+| **`comment-on-pr`**                 | Whether to comment the command's result on the pull request if the event is a pull request |        `true`         |  **false**   |
+| **`github-token`**                  | Github token to use for creating comments                                                  | `${{ github.token }}` |  **false**   |
+| **`provider`**                      | Cloud provider to get credentials for. Currently only supports `aws`.                      |                       |  **false**   |
+| **`aws-region`**                    | AWS region                                                                                 |      `us-west-2`      |  **false**   |
+| **`aws-access-key-id`**             | AWS access key id to use                                                                   |                       |  **false**   |
+| **`aws-secret-access-key`**         | AWS secret access key                                                                      |                       |  **false**   |
+| **`aws-role-to-assume`**            | AWS IAM role to assume                                                                     |                       |  **false**   |
+| **`aws-role-skip-session-tagging`** | Whether to skip session tagging during AWS role assumption                                 |                       |  **false**   |
 
 <!-- end inputs -->
 <!-- start outputs -->
