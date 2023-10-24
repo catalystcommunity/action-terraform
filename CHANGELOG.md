@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/catalystsquad/action-terraform/compare/v1.1.0...v1.2.0) (2023-10-24)
+
+
+### Features
+
+* add role-to-assume to aws auth, upgrade aws auth action to v4 ([#5](https://github.com/catalystsquad/action-terraform/issues/5)) ([b1c947c](https://github.com/catalystsquad/action-terraform/commit/b1c947c02d7592783b36fb1f77dec6bc3b013402))
+
 # [1.1.0](https://github.com/catalystsquad/action-terraform/compare/v1.0.0...v1.1.0) (2022-07-07)
 
 
