@@ -11,15 +11,15 @@ inputs:
   check-format:
     description: Check format with `terraform fmt`, report errors in PR comment
     required: false
-    default: true
+    default: 'true'
   check-validate:
     description: Validate configuration with `terraform validate`, report errors in PR comment
     required: false
-    default: true
+    default: 'true'
   comment-on-pr:
     description: Whether to comment the command's result on the pull request if the event is a pull request
     required: false
-    default: true
+    default: 'true'
   github-token:
     description: Github token to use for creating comments
     required: false
@@ -40,6 +40,9 @@ inputs:
     description: AWS secret access key
     required: false
     default: ''
+  aws-role-to-assume:
+    description: AWS IAM role to assume
+    required: false
 
 runs:
   using: "composite"
@@ -52,11 +55,12 @@ runs:
 
     - if: inputs.provider == 'aws'
       name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: ${{ inputs.aws-region }}
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        role-to-assume: ${{ inputs.aws-role-to-assume }}
 
     - if: inputs.check-format == 'true' && (inputs.command == 'plan' || inputs.command == 'validate')
       name: Terraform fmt
