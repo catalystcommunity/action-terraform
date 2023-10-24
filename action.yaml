@@ -43,7 +43,11 @@ inputs:
   aws-role-to-assume:
     description: AWS IAM role to assume
     required: false
-
+    default: ''
+  aws-role-skip-session-tagging:
+    description: Whether to skip session tagging during AWS role assumption
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -61,7 +65,7 @@ runs:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
         role-to-assume: ${{ inputs.aws-role-to-assume }}
-
+        role-skip-session-tagging: ${{ inputs.aws-role-skip-session-tagging }}
     - if: inputs.check-format == 'true' && (inputs.command == 'plan' || inputs.command == 'validate')
       name: Terraform fmt
       id: fmt
