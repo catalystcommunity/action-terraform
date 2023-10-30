@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/catalystsquad/action-terraform/compare/v1.2.0...v1.3.0) (2023-10-30)
+
+
+### Features
+
+* support specifying a terraform version ([#6](https://github.com/catalystsquad/action-terraform/issues/6)) ([a6dc1be](https://github.com/catalystsquad/action-terraform/commit/a6dc1bef52100c21b369c147f36aab53a712da59))
+
 # [1.2.0](https://github.com/catalystsquad/action-terraform/compare/v1.1.0...v1.2.0) (2023-10-24)
 
 
