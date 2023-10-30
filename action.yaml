@@ -4,6 +4,9 @@ inputs:
   command:
     description: Which Terraform command to execute, supports `plan`, `apply`, and `validate`.
     required: true
+  terraform-version:
+    description: Which version of Terraform to install. Defaults to latest. Supports semver ranges
+    default: latest
   work-dir:
     description: Location of the Terraform root module to execute from
     required: false
@@ -56,6 +59,8 @@ runs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ inputs.terraform-version }}
 
     - if: inputs.provider == 'aws'
       name: Configure AWS Credentials
