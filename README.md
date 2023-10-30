@@ -18,6 +18,11 @@ Runs a specified terraform command and comments on pull requests. Has built in s
     # Which Terraform command to execute, supports `plan`, `apply`, and `validate`.
     command: ""
 
+    # Which version of Terraform to install. Defaults to latest. Supports semver
+    # ranges
+    # Default: latest
+    terraform-version: ""
+
     # Location of the Terraform root module to execute from
     # Default: ./
     work-dir: ""
@@ -70,6 +75,7 @@ Runs a specified terraform command and comments on pull requests. Has built in s
 | **Input**                           | **Description**                                                                            |      **Default**      | **Required** |
 | :---------------------------------- | :----------------------------------------------------------------------------------------- | :-------------------: | :----------: |
 | **`command`**                       | Which Terraform command to execute, supports `plan`, `apply`, and `validate`.              |                       |   **true**   |
+| **`terraform-version`**             | Which version of Terraform to install. Defaults to latest. Supports semver ranges          |       `latest`        |  **false**   |
 | **`work-dir`**                      | Location of the Terraform root module to execute from                                      |         `./`          |  **false**   |
 | **`check-format`**                  | Check format with `terraform fmt`, report errors in PR comment                             |        `true`         |  **false**   |
 | **`check-validate`**                | Validate configuration with `terraform validate`, report errors in PR comment              |        `true`         |  **false**   |
