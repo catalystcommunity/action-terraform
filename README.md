@@ -13,7 +13,7 @@ Runs a specified terraform command and comments on pull requests. Has built in s
 <!-- start usage -->
 
 ```yaml
-- uses: catalystsquad/action-terraform@undefined
+- uses: catalystcommunity/action-terraform@undefined
   with:
     # Which Terraform command to execute, supports `plan`, `apply`, and `validate`.
     command: ""
@@ -114,7 +114,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Plan
-        uses: catalystsquad/action-terraform@v1
+        uses: catalystcommunity/action-terraform@v1
         with:
           command: plan
           work-dir: my-tf-env
@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Apply
-        uses: catalystsquad/action-terraform@v1
+        uses: catalystcommunity/action-terraform@v1
         with:
           command: apply
           work-dir: my-tf-env
